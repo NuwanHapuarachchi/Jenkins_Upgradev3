@@ -1,26 +1,53 @@
 pipeline {
-      agent any
-      stages {
-            stage('Init') {
-                  steps {
-                        echo 'Hi, this is Anshul from LevelUp360'
-                        echo 'We are Starting the Testing'
-                  }
+    agent any
+
+    tools {
+        jdk 'jdk-8'
+        maven 'maven-3.9'
+    }
+
+    stages {
+
+        stage('Init') {
+            steps {
+                echo 'Starting Maven CI Pipeline'
             }
-            stage('Build') {
-                  steps {
-                        echo 'Building Sample Maven Project'
-                  }
+        }
+
+        stage('Checkout') {
+            steps {
+                checkout scm
             }
-            stage('Deploy') {
-                  steps {
-                        echo "Deploying in Staging Area"
-                  }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'mvn clean compile'
             }
-            stage('Deploy Production') {
-                  steps {
-                        echo "Deploying in Production Area"
-                  }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'mvn test'
             }
-      }
+        }
+
+        stage('Package') {
+            steps {
+                sh 'mvn package'
+            }
+        }
+
+        stage('Deploy (Staging)') {
+            steps {
+                echo 'Deploying JAR to staging (placeholder)'
+            }
+        }
+
+        stage('Deploy (Production)') {
+            steps {
+                echo 'Deploying JAR to production (manual gate later)'
+            }
+        }
+    }
 }
