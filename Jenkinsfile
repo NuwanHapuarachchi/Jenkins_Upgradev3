@@ -22,19 +22,25 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'mvn clean compile'
+                dir('maven-samples/single-module') {
+                    sh 'mvn clean compile'
+                }
             }
         }
 
         stage('Test') {
             steps {
-                sh 'mvn test'
+                dir('maven-samples/single-module') {
+                    sh 'mvn test'
+                }
             }
         }
 
         stage('Package') {
             steps {
-                sh 'mvn package'
+                dir('maven-samples/single-module') {
+                    sh 'mvn package'
+                }
             }
         }
 
