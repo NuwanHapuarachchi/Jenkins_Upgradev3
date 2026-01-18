@@ -1,18 +1,23 @@
 pipeline {
-    agent any
-
-    tools {
-        jdk 'jdk-8'
-        maven 'maven-3.9'
+    agent {
+        kubernetes {
+            label 'maven-agent'
+            defaultContainer 'maven'
+            yaml """
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: maven
+    image: maven:3.9-eclipse-temurin-8
+    command:
+    - cat
+    tty: true
+"""
+        }
     }
 
     stages {
-
-        stage('Init') {
-            steps {
-                echo 'Starting Maven CI Pipeline'
-            }
-        }
 
         stage('Checkout') {
             steps {
@@ -41,18 +46,6 @@ pipeline {
                 dir('maven-samples/single-module') {
                     sh 'mvn package'
                 }
-            }
-        }
-
-        stage('Deploy (Staging)') {
-            steps {
-                echo 'Deploying JAR to staging (placeholder)'
-            }
-        }
-
-        stage('Deploy (Production)') {
-            steps {
-                echo 'Deploying JAR to production (manual gate later)'
             }
         }
     }
